@@ -21,8 +21,11 @@
  *  0  => true
  *  -5 => false
  */
-function isPositive(/* number */) {
-  throw new Error('Not implemented');
+function isPositive(number) {
+  if (number >= 0) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -38,8 +41,15 @@ function isPositive(/* number */) {
  *  -5, 0, 5      => 5
  *  -0.1, 0, 0.2  => 0.2
  */
-function getMaxNumber(/* a, b, c */) {
-  throw new Error('Not implemented');
+function getMaxNumber(a, b, c) {
+  let max = a;
+  if (b > max) {
+    max = b;
+  }
+  if (c > max) {
+    max = c;
+  }
+  return max;
 }
 
 /**
@@ -60,8 +70,17 @@ function getMaxNumber(/* a, b, c */) {
  * {x: 1, y: 1}, {x: 2, y: 8} => false
  * {x: 1, y: 1}, {x: 2, y: 8} => false
  */
-function canQueenCaptureKing(/* queen, king */) {
-  throw new Error('Not implemented');
+function canQueenCaptureKing(queen, king) {
+  if (queen.x === king.x && queen.y === king.y) {
+    return true;
+  }
+  if (Math.abs(queen.x - king.x) === Math.abs(queen.y - king.y)) {
+    return true;
+  }
+  if (queen.x === king.x || queen.y === king.y) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -82,8 +101,12 @@ function canQueenCaptureKing(/* queen, king */) {
  *  2, 2, 5   => false
  *  3, 0, 3   => false
  */
-function isIsoscelesTriangle(/* a, b, c */) {
-  throw new Error('Not implemented');
+// if ((a === b && a + b > c) || (b === c && b + c > a) || (c === a && c + a > b)) {
+function isIsoscelesTriangle(a, b, c) {
+  if (a === b || b === c || c === a) {
+    if (a + b > c && b + c > a && c + a > b) return true;
+  }
+  return false;
 }
 
 /**
@@ -172,8 +195,16 @@ function getIndexOf(/* str, letter */) {
  *  12345, 0    => false
  *  12345, 6    => false
  */
-function isContainNumber(/* num, digit */) {
-  throw new Error('Not implemented');
+function isContainNumber(num, digit) {
+  let number = num;
+  while (number > 0) {
+    const lastDigit = number % 10;
+    if (lastDigit === digit) {
+      return true;
+    }
+    number = Math.floor(number / 10);
+  }
+  return false;
 }
 
 /**
@@ -189,8 +220,38 @@ function isContainNumber(/* num, digit */) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+/*
+// left 0
+// right 11
+
+// left  1, 
+// right  2, 5, 3, 0
+
+// left 1, 2
+// right 5,3, 0
+
+// left 1, 2, 5
+// right 3, 0
+
+// left 1, 2, 5, 3
+// right 0
+
+// left 1, 2, 5, 3, 0
+// right 
+*/
+function getBalanceIndex(arr) {
+  let leftSum = 0;
+  let rightSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    rightSum += arr[i];
+  }
+
+  for (let i = 0; i < arr.length; i += 1) {
+    rightSum -= arr[i];
+    if (leftSum === rightSum) return i;
+    leftSum += arr[i];
+  }
+  return -1;
 }
 
 /**
@@ -214,8 +275,46 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = [];
+  }
+  let top = 0;
+  let bottom = size - 1;
+  let left = 0;
+  let right = size - 1;
+  let direction = 0;
+  let number = 1;
+  while (top <= bottom && left <= right) {
+    if (direction === 0) {
+      for (let i = left; i <= right; i += 1) {
+        matrix[top][i] = number;
+        number += 1;
+      }
+      top += 1;
+    } else if (direction === 1) {
+      for (let i = top; i <= bottom; i += 1) {
+        matrix[i][right] = number;
+        number += 1;
+      }
+      right -= 1;
+    } else if (direction === 2) {
+      for (let i = right; i >= left; i -= 1) {
+        matrix[bottom][i] = number;
+        number += 1;
+      }
+      bottom -= 1;
+    } else if (direction === 3) {
+      for (let i = bottom; i >= top; i -= 1) {
+        matrix[i][left] = number;
+        number += 1;
+      }
+      left += 1;
+    }
+    direction = (direction + 1) % 4;
+  }
+  return matrix;
 }
 
 /**
@@ -233,8 +332,19 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const n = matrix.length;
+  const matr = matrix;
+  for (let i = 0; i < n / 2; i += 1) {
+    for (let j = i; j < n - i - 1; j += 1) {
+      const temp = matr[i][j];
+      matr[i][j] = matr[n - 1 - j][i];
+      matr[n - 1 - j][i] = matr[n - 1 - i][n - 1 - j];
+      matr[n - 1 - i][n - 1 - j] = matr[j][n - 1 - i];
+      matr[j][n - 1 - i] = temp;
+    }
+  }
+  return matr;
 }
 
 /**
@@ -251,8 +361,39 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  function swap(arSwap, i, j) {
+    const temp = arSwap[i];
+    const varSwap = arSwap;
+    varSwap[i] = varSwap[j];
+    varSwap[j] = temp;
+  }
+  function partition(arSwap, low, high) {
+    const pivot = arSwap[high];
+    let i = low - 1;
+    for (let j = low; j < high; j += 1) {
+      if (arSwap[j] <= pivot) {
+        i += 1;
+        swap(arSwap, i, j);
+      }
+    }
+    swap(arSwap, i + 1, high);
+    return i + 1;
+  }
+  function quickSort(arSwap, low, high) {
+    if (low >= high) {
+      return;
+    }
+    const pi = partition(arSwap, low, high);
+    quickSort(arSwap, low, pi - 1);
+    quickSort(arSwap, pi + 1, high);
+  }
+
+  if (!arr || !Array.isArray(arr)) {
+    throw new Error('Invalid input');
+  }
+  quickSort(arr, 0, arr.length - 1);
+  return arr;
 }
 
 /**
@@ -272,8 +413,20 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let arr = str.split('');
+  for (let i = 0; i < iterations; i += 1) {
+    const newArr = [];
+    const arrShuff = arr.length;
+    for (let j = 0; j < arrShuff.length; j += 2) {
+      newArr.push(arr[j]);
+    }
+    for (let j = 1; j < arrShuff.length; j += 2) {
+      newArr.push(arr[j]);
+    }
+    arr = newArr;
+  }
+  return arr.join('');
 }
 
 /**
